@@ -9,7 +9,7 @@ RUN apt-get update && \
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 # reinstall yt-dlp from master because you need the latest version for the fs locking filesystem patch applied later to work
-python3 -m pip install --force-reinstall https://github.com/yt-dlp/yt-dlp/archive/master.tar.gz
+RUN python3 -m pip install --force-reinstall https://github.com/yt-dlp/yt-dlp/archive/master.tar.gz
 
 # create abc user so root isn't used #using my convention of uid and gid 
 RUN \
@@ -32,7 +32,7 @@ COPY patches /patches
 # patch non-blocking only filesystems for yt-dlp https://github.com/yt-dlp/yt-dlp/pull/6840/files 
 RUN \
     cd /usr/local/lib/python3.9/site-packages/yt_dlp && \
-    patch -p1 < /patches/yt_dlp_fs_locking.patch
+    patch -p1 < /patches/fix-non-blocking-only-filesystems.patch
 
 # update file permissions
 RUN \
